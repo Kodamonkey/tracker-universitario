@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import FiltroEventos from "../src/components/FiltroEventos";
+import CalendarioEventos from "../src/components/CalendarioEventos";
+import { Container, Typography, TextField } from "@mui/material";
 
 function App() {
+  const [filter, setFilter] = useState(null);
+
+  const handleFilterChange = (tipo) => {
+    setFilter(tipo);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="sm" sx={{ textAlign: "center", marginTop: 5 }}>
+      <Typography variant="h4" gutterBottom>
+        Tracker de Eventos en la Universidad
+      </Typography>
+      <FiltroEventos onFilterChange={handleFilterChange} />
+      <TextField
+        variant="outlined"
+        placeholder="Buscar eventos..."
+        fullWidth
+        sx={{ marginBottom: 3 }}
+      />
+      <CalendarioEventos events={[]} filter={filter} />
+    </Container>
   );
 }
 
