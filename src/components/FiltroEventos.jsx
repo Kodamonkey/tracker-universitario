@@ -75,7 +75,7 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
         </Button>
         <Button
           variant="contained"
-          color="default"
+          color="primary"
           onClick={() => handleFilterClick("Otros")}
         >
           Más tipos de eventos

@@ -1,6 +1,7 @@
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { InputBase, IconButton, Paper } from "@mui/material";
 
 const Navbar = () => {
@@ -9,26 +10,36 @@ const Navbar = () => {
       component="form"
       sx={{
         position: "fixed",
-        top: 30, // margen superior
-        right: 20, // margen desde la derecha, aumenta para alejarlo más
+        top: 0,
+        left: 0,
+        right: 0, // Esto asegura que ocupe todo el ancho
         display: "flex",
         alignItems: "center",
-        width: "20%", // Reduce el tamaño general de la Navbar
-        maxWidth: 500, // Ajusta el tamaño máximo
-        padding: "2px 4px",
-        borderRadius: 50, // Hacer la forma ovalada
-        backgroundColor: "#e0b3ff", // Color violeta claro
-        zIndex: 1000, // asegurar que esté sobre otros elementos
+        justifyContent: "space-between", // Distribuye elementos en extremos
+        padding: "8px 16px", // Ajuste de padding para margen interno
+        backgroundColor: "#ffffff", // Color de fondo violeta claro
+        zIndex: 1000,
+        borderRadius: 0, // Sin borde redondeado para que se vea como una barra completa
       }}
     >
+      {/* Ícono de inicio de sesión en la esquina izquierda */}
+      <IconButton sx={{ padding: "8px" }} aria-label="login">
+        <AccountCircleIcon />
+      </IconButton>
+
+      {/* Ícono de menú en la izquierda, cerca del ícono de inicio de sesión */}
       <IconButton sx={{ padding: "8px" }} aria-label="menu">
         <MenuIcon />
       </IconButton>
+
+      {/* Barra de búsqueda en el centro */}
       <InputBase
         sx={{ ml: 1, flex: 1 }}
         placeholder="Hinted search text"
         inputProps={{ "aria-label": "search" }}
       />
+
+      {/* Ícono de búsqueda en la derecha */}
       <IconButton type="submit" sx={{ padding: "8px" }} aria-label="search">
         <SearchIcon />
       </IconButton>
