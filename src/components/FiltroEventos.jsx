@@ -9,11 +9,14 @@ import {
   Typography,
   Stack,
   Button,
+  Paper,
+  Divider,
 } from "@mui/material";
 
 const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [checklistItems, setChecklistItems] = useState([]);
+  const [showChecklist, setShowChecklist] = useState(false);
 
   // Maneja el cambio de visibilidad para cada evento en el checklist
   const handleCheckboxChange = (eventKey) => {
@@ -29,15 +32,15 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
   // Maneja el filtrado por tipo de evento, alternando la visibilidad
   const handleFilterClick = (filter) => {
     if (selectedFilter === filter) {
-      // Si el filtro ya está seleccionado, deseleccionarlo para minimizar
       setSelectedFilter(null);
       setChecklistItems([]);
+      setShowChecklist(false);
     } else {
-      // Si no está seleccionado, mostrar los eventos del filtro
       setSelectedFilter(filter);
       setChecklistItems(
         Object.entries(eventos).filter(([key, value]) => value.type === filter)
       );
+      setShowChecklist(true);
     }
   };
 
@@ -81,22 +84,46 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
           Más tipos de eventos
         </Button>
       </Stack>
-      {/* Checklist de Eventos */}
-      {selectedFilter && (
-        <List>
-          {checklistItems.map(([key, event], index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={!!visibleEventos[key]}
-                  onChange={() => handleCheckboxChange(key)}
-                />
-              </ListItemIcon>
-              <ListItemText primary={event.name} />
-            </ListItem>
-          ))}
-        </List>
+
+      {/* Cuadro flotante de checklist de eventos */}
+      {showChecklist && (
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            top: "300px", // Ajusta este valor para controlar la posición vertical
+            left: "-120px", // Ajusta este valor para controlar la posición horizontal
+            width: 250,
+            padding: 2,
+            backgroundColor: "#f0f4ff", // Color de fondo personalizado
+            borderRadius: "12px",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Sombra para hacerlo más atractivo
+            zIndex: 1000, // Asegura que esté sobre otros elementos
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ textAlign: "center", marginBottom: 1 }}
+          >
+            {selectedFilter} Eventos
+          </Typography>
+          <Divider sx={{ marginBottom: 2 }} /> {/* Línea de separación */}
+          <List>
+            {checklistItems.map(([key, event], index) => (
+              <ListItem key={index} disablePadding>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={!!visibleEventos[key]}
+                    onChange={() => handleCheckboxChange(key)}
+                    sx={{ color: event.color || "primary.main" }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={event.name} />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       )}
     </Box>
   );
