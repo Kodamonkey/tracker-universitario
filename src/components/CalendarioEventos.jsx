@@ -1,20 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { Paper, Typography, Box, IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
+// Definimos los colores para cada tipo de evento
+const eventColors = {
+  Personalizado: "#6c63ff", // Morado
+  Deportivos: "#ffeb3b", // Amarillo
+  Charlas: "#f44336", // Rojo
+  Proximamente: "#2196f3", // Azul
+  Otros: "#9c27b0", // Púrpura
+};
+
 const CalendarioEventos = ({ eventos, onEventClick }) => {
   const diasDeLaSemana = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-  const mes = "Agosto";
-  const año = "2023";
   const cellSize = 60;
 
+  const [mes, setMes] = useState(10); // 7 para agosto (enero = 0)
+  const [año, setAño] = useState(2024);
+
+  // Obtener el primer día del mes actual y el número total de días en el mes
+  const primerDiaDeLaSemana = new Date(año, mes, 1).getDay();
+  const totalDias = new Date(año, mes + 1, 0).getDate();
+
+  // Función para cambiar al mes anterior
+  const handlePrevMonth = () => {
+    if (mes === 0) {
+      setMes(11);
+      setAño((prevAño) => prevAño - 1);
+    } else {
+      setMes((prevMes) => prevMes - 1);
+    }
+  };
+
+  // Función para cambiar al mes siguiente
+  const handleNextMonth = () => {
+    if (mes === 11) {
+      setMes(0);
+      setAño((prevAño) => prevAño + 1);
+    } else {
+      setMes((prevMes) => prevMes + 1);
+    }
+  };
+
+  // Renderizar el calendario
   const renderCalendar = () => {
-    const totalDias = 31;
     const calendario = [];
     let semana = [];
-    const primerDiaDeLaSemana = 2;
 
+    // Llenar los días vacíos al principio de la primera semana
     for (let i = 0; i < primerDiaDeLaSemana; i++) {
       semana.push(
         <div
@@ -24,10 +58,15 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
       );
     }
 
+    // Renderizar los días del mes
     for (let day = 1; day <= totalDias; day++) {
-      const dateKey = `2023-08-${String(day).padStart(2, "0")}`;
+      const dateKey = `${año}-${String(mes + 1).padStart(2, "0")}-${String(
+        day
+      ).padStart(2, "0")}`;
       const event = eventos[dateKey];
-      let bgColor = event ? event.color : "#f9f9f9";
+      const bgColor = event
+        ? eventColors[event.type] || event.color
+        : "#f9f9f9";
 
       semana.push(
         <Paper
@@ -57,9 +96,13 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         </Paper>
       );
 
+      // Al completar una semana, agregarla al calendario y vaciar la fila
       if (semana.length === 7) {
         calendario.push(
-          <div key={`week-${calendario.length}`} style={{ display: "flex" }}>
+          <div
+            key={`week-${calendario.length}`}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
             {semana}
           </div>
         );
@@ -67,9 +110,13 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
       }
     }
 
+    // Agregar la última semana si está incompleta
     if (semana.length > 0) {
       calendario.push(
-        <div key={`week-${calendario.length}`} style={{ display: "flex" }}>
+        <div
+          key={`week-${calendario.length}`}
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           {semana}
         </div>
       );
@@ -99,13 +146,16 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
           padding: "0 16px",
         }}
       >
-        <IconButton>
+        <IconButton onClick={handlePrevMonth}>
           <ArrowBackIosIcon />
         </IconButton>
         <Typography variant="h6" fontWeight="bold" color="#333">
-          {mes} {año}
+          {new Date(año, mes).toLocaleString("es-ES", {
+            month: "long",
+            year: "numeric",
+          })}
         </Typography>
-        <IconButton>
+        <IconButton onClick={handleNextMonth}>
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>

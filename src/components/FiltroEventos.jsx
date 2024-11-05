@@ -1,3 +1,4 @@
+// FiltroEventos.jsx
 import React, { useState } from "react";
 import {
   Box,
@@ -18,7 +19,15 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
   const [checklistItems, setChecklistItems] = useState([]);
   const [showChecklist, setShowChecklist] = useState(false);
 
-  // Maneja el cambio de visibilidad para cada evento en el checklist
+  // Define los colores para cada tipo de evento
+  const eventColors = {
+    Personalizado: "#6c63ff", // Color morado para eventos personalizados
+    Deportivos: "#ffeb3b", // Amarillo
+    Charlas: "#f44336", // Rojo
+    Proximamente: "#2196f3", // Azul
+    Otros: "#9c27b0", // Púrpura
+  };
+
   const handleCheckboxChange = (eventKey) => {
     const updatedEventos = { ...visibleEventos };
     if (updatedEventos[eventKey]) {
@@ -29,7 +38,6 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
     onFilterChange(updatedEventos);
   };
 
-  // Maneja el filtrado por tipo de evento, alternando la visibilidad
   const handleFilterClick = (filter) => {
     if (selectedFilter === filter) {
       setSelectedFilter(null);
@@ -46,43 +54,33 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
 
   return (
     <Box sx={{ position: "relative", width: "100%", marginBottom: 3 }}>
-      <Typography variant="h6" sx={{ marginBottom: 2 }}>
-        Filtrar Eventos
+      <Typography variant="h5" sx={{ marginBottom: 2 }}>
+        Filtrar Eventos:
       </Typography>
+
       {/* Botones de Filtro */}
       <Stack
         direction="row"
         spacing={2}
         sx={{ marginBottom: 3, justifyContent: "center" }}
       >
-        <Button
-          variant="contained"
-          color="warning"
-          onClick={() => handleFilterClick("Deportivos")}
-        >
-          Deportivos
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleFilterClick("Charlas")}
-        >
-          Charlas
-        </Button>
-        <Button
-          variant="contained"
-          color="info"
-          onClick={() => handleFilterClick("Proximamente")}
-        >
-          Proximamente
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleFilterClick("Otros")}
-        >
-          Más tipos de eventos
-        </Button>
+        {Object.keys(eventColors).map((type) => (
+          <Button
+            key={type}
+            variant="contained"
+            onClick={() => handleFilterClick(type)}
+            sx={{
+              backgroundColor: eventColors[type],
+              color: "#000000",
+              "&:hover": {
+                backgroundColor: eventColors[type],
+                opacity: 0.8,
+              },
+            }}
+          >
+            {type}
+          </Button>
+        ))}
       </Stack>
 
       {/* Cuadro flotante de checklist de eventos */}
@@ -91,23 +89,23 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
           elevation={4}
           sx={{
             position: "absolute",
-            top: "300px", // Ajusta este valor para controlar la posición vertical
-            left: "-120px", // Ajusta este valor para controlar la posición horizontal
+            top: "300px",
+            left: "-120px",
             width: 250,
             padding: 2,
-            backgroundColor: "#f0f4ff", // Color de fondo personalizado
+            backgroundColor: "#f0f4ff",
             borderRadius: "12px",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Sombra para hacerlo más atractivo
-            zIndex: 1000, // Asegura que esté sobre otros elementos
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            zIndex: 1000,
           }}
         >
           <Typography
             variant="h6"
             sx={{ textAlign: "center", marginBottom: 1 }}
           >
-            {selectedFilter} Eventos
+            {selectedFilter}
           </Typography>
-          <Divider sx={{ marginBottom: 2 }} /> {/* Línea de separación */}
+          <Divider sx={{ marginBottom: 2 }} />
           <List>
             {checklistItems.map(([key, event], index) => (
               <ListItem key={index} disablePadding>
@@ -116,7 +114,7 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
                     edge="start"
                     checked={!!visibleEventos[key]}
                     onChange={() => handleCheckboxChange(key)}
-                    sx={{ color: event.color || "primary.main" }}
+                    sx={{ color: eventColors[event.type] || "primary.main" }}
                   />
                 </ListItemIcon>
                 <ListItemText primary={event.name} />
