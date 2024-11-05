@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  Button,
-  Stack,
   Box,
   Checkbox,
   List,
@@ -9,69 +7,51 @@ import {
   ListItemText,
   ListItemIcon,
   Typography,
+  Stack,
+  Button,
 } from "@mui/material";
 
-const FiltroEventos = ({ onFilterChange }) => {
+const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [checklistItems, setChecklistItems] = useState([]);
 
-  // Definir los eventos de ejemplo para cada filtro
-  const eventos = {
-    Deportivos: ["Evento 1", "Evento 2", "Evento 3"],
-    Charlas: ["Evento 4", "Evento 5", "Evento 6"],
-    Proximamente: ["Evento 7", "Evento 8", "Evento 9"],
-    Otros: ["Evento 10", "Evento 11", "Evento 12"],
+  // Maneja el cambio de visibilidad para cada evento en el checklist
+  const handleCheckboxChange = (eventKey) => {
+    const updatedEventos = { ...visibleEventos };
+    if (updatedEventos[eventKey]) {
+      delete updatedEventos[eventKey];
+    } else {
+      updatedEventos[eventKey] = eventos[eventKey];
+    }
+    onFilterChange(updatedEventos);
   };
 
-  // Función para manejar el cambio de filtro
+  // Maneja el filtrado por tipo de evento, alternando la visibilidad
   const handleFilterClick = (filter) => {
-    setSelectedFilter(filter);
-    setChecklistItems(eventos[filter]);
-    onFilterChange(filter); // Llamar la función de filtro en caso de que se necesite en otro componente
+    if (selectedFilter === filter) {
+      // Si el filtro ya está seleccionado, deseleccionarlo para minimizar
+      setSelectedFilter(null);
+      setChecklistItems([]);
+    } else {
+      // Si no está seleccionado, mostrar los eventos del filtro
+      setSelectedFilter(filter);
+      setChecklistItems(
+        Object.entries(eventos).filter(([key, value]) => value.type === filter)
+      );
+    }
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: 4,
-      }}
-    >
-      {/* Menú de checklist flotante a la izquierda */}
-      {selectedFilter && (
-        <Box
-          sx={{
-            position: "absolute",
-            left: "-250px", // Ajusta este valor según el espacio que necesites
-            top: "0",
-            width: "200px",
-            padding: "16px",
-            backgroundColor: "#f7f7fb",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            {selectedFilter}
-          </Typography>
-          <List>
-            {checklistItems.map((item, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemIcon>
-                  <Checkbox edge="start" />
-                </ListItemIcon>
-                <ListItemText primary={item} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      )}
-
-      {/* Botones de filtro */}
-      <Stack direction="row" spacing={2} sx={{ marginBottom: 3 }}>
+    <Box sx={{ position: "relative", width: "100%", marginBottom: 3 }}>
+      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+        Filtrar Eventos
+      </Typography>
+      {/* Botones de Filtro */}
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ marginBottom: 3, justifyContent: "center" }}
+      >
         <Button
           variant="contained"
           color="warning"
@@ -101,11 +81,23 @@ const FiltroEventos = ({ onFilterChange }) => {
           Más tipos de eventos
         </Button>
       </Stack>
-
-      {/* Aquí iría el calendario */}
-      <Box sx={{ width: "100%" }}>
-        {/* Aquí insertas tu componente de calendario */}
-      </Box>
+      {/* Checklist de Eventos */}
+      {selectedFilter && (
+        <List>
+          {checklistItems.map(([key, event], index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={!!visibleEventos[key]}
+                  onChange={() => handleCheckboxChange(key)}
+                />
+              </ListItemIcon>
+              <ListItemText primary={event.name} />
+            </ListItem>
+          ))}
+        </List>
+      )}
     </Box>
   );
 };
