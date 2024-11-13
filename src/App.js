@@ -97,7 +97,7 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <Navbar eventos={eventos} />
       <Routes>
         {/* Ruta principal con el calendario */}
         <Route
