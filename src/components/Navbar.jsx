@@ -35,7 +35,7 @@ const Navbar = () => {
       {/* Barra de búsqueda en el centro */}
       <InputBase
         sx={{ ml: 1, flex: 1 }}
-        placeholder="Hinted search text"
+        placeholder="Buscar Evento"
         inputProps={{ "aria-label": "search" }}
       />
 

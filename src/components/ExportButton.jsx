@@ -39,12 +39,12 @@ const ExportButton = ({ events = [] }) => (
     variant="contained"
     onClick={() => exportEventToCalendar(events)}
     sx={{
-      backgroundColor: "#6c63ff",
+      backgroundColor: "#0056b3",
       color: "white",
       marginTop: 4,
       padding: "12px 24px",
       boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)", // Sombra para efecto de elevación
-      borderRadius: "8px", // Bordes redondeados
+      borderRadius: "20px", // Bordes redondeados
       transition: "transform 0.2s ease, box-shadow 0.2s ease",
       "&:hover": {
         backgroundColor: "#5753cc",

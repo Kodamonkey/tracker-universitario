@@ -1,31 +1,78 @@
+/* Fondo general */
 body {
-  background-color: #d8eae8;
+  background-color: #e6f0f3;
+  font-family: "Open Sans", "Roboto", Arial, sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-.export-button {
-  background-color: #6c63ff; /* Color morado del botón */
+/* Encabezado del calendario */
+.calendar-header {
+  background-color: #306696;
   color: white;
-  float: right;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px 6px 0 0;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.export-button:hover {
-  background-color: #5753cc; /* Color al pasar el cursor */
+/* Días de la semana */
+.days-of-week {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f5f8;
+  color: #333;
+  padding: 8px 0;
+  border-bottom: 1px solid #d9dee2;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Celdas del calendario */
+.calendar-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #d9dee2;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.calendar-cell:hover {
+  background-color: #d3e4ef;
+  transform: scale(1.05);
+}
+
+/* Eventos */
+.event {
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.event-deportivo {
+  background-color: #ffeb3b; /* Amarillo */
+}
+
+.event-charla {
+  background-color: #f44336; /* Rojo */
+}
+
+.event-proximamente {
+  background-color: #2196f3; /* Azul */
+}
+
+.event-personalizado {
+  background-color: #6c63ff; /* Morado */
+}
+
+.event-otros {
+  background-color: #9c27b0; /* Púrpura */
 }

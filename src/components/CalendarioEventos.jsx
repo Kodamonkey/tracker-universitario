@@ -3,27 +3,23 @@ import { Paper, Typography, Box, IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-// Definimos los colores para cada tipo de evento
+// Definimos los colores de eventos (coherente con el filtro)
 const eventColors = {
-  Personalizado: "#6c63ff", // Morado
-  Deportivos: "#ffeb3b", // Amarillo
-  Charlas: "#f44336", // Rojo
-  Proximamente: "#2196f3", // Azul
-  Otros: "#9c27b0", // Púrpura
+  Personalizado: "#1976d2", // Azul
+  Deportivos: "#d4a017", // Amarillo
+  Charlas: "#d32f2f", // Rojo
+  Proximamente: "#388e3c", // Verde
+  Otros: "#000000", // Negro
 };
 
 const CalendarioEventos = ({ eventos, onEventClick }) => {
   const diasDeLaSemana = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
   const cellSize = 60;
 
-  const [mes, setMes] = useState(10); // 7 para agosto (enero = 0)
-  const [año, setAño] = useState(2024);
+  const [mes, setMes] = useState(new Date().getMonth()); // Mes actual
+  const [año, setAño] = useState(new Date().getFullYear()); // Año actual
 
-  // Obtener el primer día del mes actual y el número total de días en el mes
-  const primerDiaDeLaSemana = new Date(año, mes, 1).getDay();
-  const totalDias = new Date(año, mes + 1, 0).getDate();
-
-  // Función para cambiar al mes anterior
+  // Cambiar al mes anterior
   const handlePrevMonth = () => {
     if (mes === 0) {
       setMes(11);
@@ -33,7 +29,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
     }
   };
 
-  // Función para cambiar al mes siguiente
+  // Cambiar al mes siguiente
   const handleNextMonth = () => {
     if (mes === 11) {
       setMes(0);
@@ -43,17 +39,24 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
     }
   };
 
+  const primerDiaDeLaSemana = new Date(año, mes, 1).getDay();
+  const totalDias = new Date(año, mes + 1, 0).getDate();
+
   // Renderizar el calendario
   const renderCalendar = () => {
     const calendario = [];
     let semana = [];
 
-    // Llenar los días vacíos al principio de la primera semana
+    // Llenar los días vacíos al inicio de la primera semana
     for (let i = 0; i < primerDiaDeLaSemana; i++) {
       semana.push(
         <div
           key={`empty-${i}`}
-          style={{ width: `${cellSize}px`, height: `${cellSize}px` }}
+          style={{
+            width: `${cellSize}px`,
+            height: `${cellSize}px`,
+            backgroundColor: "#f5f5f5",
+          }}
         ></div>
       );
     }
@@ -66,7 +69,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
       const event = eventos[dateKey];
       const bgColor = event
         ? eventColors[event.type] || event.color
-        : "#f9f9f9";
+        : "#ffffff";
 
       semana.push(
         <Paper
@@ -79,9 +82,9 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
             alignItems: "center",
             justifyContent: "center",
             margin: "2px",
+            border: "1px solid #ddd",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             cursor: event ? "pointer" : "default",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-            borderRadius: "4px",
             transition: "transform 0.2s ease",
             "&:hover": {
               transform: "scale(1.05)",
@@ -90,13 +93,16 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
           }}
           onClick={() => event && onEventClick(event)}
         >
-          <Typography variant="body2" fontWeight="bold" color="#333">
+          <Typography
+            variant="body2"
+            fontWeight="bold"
+            sx={{ color: event ? "#ffffff" : "#333" }}
+          >
             {day}
           </Typography>
         </Paper>
       );
 
-      // Al completar una semana, agregarla al calendario y vaciar la fila
       if (semana.length === 7) {
         calendario.push(
           <div
@@ -133,10 +139,11 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         margin: "auto",
         padding: "20px",
         borderRadius: "12px",
-        backgroundColor: "#f0f8ff",
+        backgroundColor: "#ffffff",
+        border: "1px solid #ddd",
       }}
     >
-      {/* Encabezado del mes y año con botones de navegación */}
+      {/* Encabezado */}
       <Box
         sx={{
           display: "flex",
@@ -149,7 +156,11 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         <IconButton onClick={handlePrevMonth}>
           <ArrowBackIosIcon />
         </IconButton>
-        <Typography variant="h6" fontWeight="bold" color="#333">
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{ textTransform: "capitalize", color: "#333" }}
+        >
           {new Date(año, mes).toLocaleString("es-ES", {
             month: "long",
             year: "numeric",
@@ -160,7 +171,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         </IconButton>
       </Box>
 
-      {/* Encabezado de los días de la semana */}
+      {/* Días de la semana */}
       <Box
         sx={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}
       >
@@ -172,7 +183,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
             sx={{
               width: `${cellSize}px`,
               textAlign: "center",
-              color: "#666",
+              color: "#555",
               paddingBottom: "4px",
             }}
           >
@@ -181,7 +192,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         ))}
       </Box>
 
-      {/* Renderizado del calendario */}
+      {/* Días del mes */}
       {renderCalendar()}
     </Paper>
   );

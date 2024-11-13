@@ -1,4 +1,3 @@
-// FiltroEventos.jsx
 import React, { useState } from "react";
 import {
   Box,
@@ -21,11 +20,11 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
 
   // Define los colores para cada tipo de evento
   const eventColors = {
-    Personalizado: "#6c63ff", // Color morado para eventos personalizados
-    Deportivos: "#ffeb3b", // Amarillo
-    Charlas: "#f44336", // Rojo
-    Proximamente: "#2196f3", // Azul
-    Otros: "#9c27b0", // Púrpura
+    Personalizado: "#1976d2", // Azul (Ceremonias)
+    Deportivos: "#d4a017", // Amarillo (Estudiantes)
+    Charlas: "#d32f2f", // Rojo (Profesores)
+    Proximamente: "#388e3c", // Verde (Jefes de Carrera)
+    Otros: "#000000", // Negro (Comunidad USM)
   };
 
   const handleCheckboxChange = (eventKey) => {
@@ -71,10 +70,13 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
             onClick={() => handleFilterClick(type)}
             sx={{
               backgroundColor: eventColors[type],
-              color: "#000000",
+              color: "#ffffff",
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              borderRadius: "20px", // Bordes redondeados como en la imagen
               "&:hover": {
                 backgroundColor: eventColors[type],
-                opacity: 0.8,
+                opacity: 0.9,
               },
             }}
           >

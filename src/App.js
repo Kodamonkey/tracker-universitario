@@ -142,12 +142,12 @@ function App() {
             color="primary"
             onClick={handleAddEvent}
             sx={{
-              backgroundColor: "#6c63ff",
+              backgroundColor: "#0056b3",
               color: "white",
               marginTop: 4,
               padding: "12px 24px",
               boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
-              borderRadius: "8px",
+              borderRadius: "20px",
               transition: "transform 0.2s ease, box-shadow 0.2s ease",
               "&:hover": {
                 backgroundColor: "#5753cc",
