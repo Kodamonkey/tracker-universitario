@@ -1,15 +1,12 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import FiltroEventos from "./components/FiltroEventos";
 import CalendarioEventos from "./components/CalendarioEventos";
+import DetalleEvento from "./components/DetallesEvento"; // Importamos el nuevo componente de detalles
 import {
   Container,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Button,
   Box,
 } from "@mui/material";
@@ -63,19 +60,10 @@ const initialEventos = {
 function App() {
   const [eventos, setEventos] = useState(initialEventos); // Estado para todos los eventos
   const [visibleEventos, setVisibleEventos] = useState(initialEventos); // Eventos visibles según el filtro
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleFilterChange = (updatedEventos) => {
     setVisibleEventos(updatedEventos);
-  };
-
-  const handleEventClick = (event) => {
-    setSelectedEvent(event);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedEvent(null);
   };
 
   const handleAddEvent = () => {
@@ -108,91 +96,79 @@ function App() {
   };
 
   return (
-    <div>
+    <Router>
       <Navbar />
-      <Container
-        maxWidth="md"
-        sx={{ textAlign: "center", marginTop: 10, paddingBottom: 5 }}
-      >
-        <Typography variant="h3" gutterBottom>
-          Tracker de Eventos en la Universidad
-        </Typography>
-        <FiltroEventos
-          eventos={eventos} // Pasa todos los eventos al componente FiltroEventos
-          visibleEventos={visibleEventos}
-          onFilterChange={handleFilterChange}
+      <Routes>
+        {/* Ruta principal con el calendario */}
+        <Route
+          path="/"
+          element={
+            <Container
+              maxWidth="md"
+              sx={{ textAlign: "center", marginTop: 10, paddingBottom: 5 }}
+            >
+              <Typography variant="h3" gutterBottom>
+                Tracker de Eventos en la Universidad
+              </Typography>
+              <FiltroEventos
+                eventos={eventos} // Pasa todos los eventos al componente FiltroEventos
+                visibleEventos={visibleEventos}
+                onFilterChange={handleFilterChange}
+              />
+              <CalendarioEventos
+                eventos={visibleEventos}
+                onEventClick={(event) => {
+                  window.location.href = `/evento/${event.date}`; // Redirige a los detalles
+                }}
+              />
+              <Box
+                sx={{
+                  marginTop: 4,
+                  display: "flex",
+                  gap: 2,
+                  justifyContent: "center",
+                  paddingBottom: 5,
+                }}
+              >
+                <ExportButton events={Object.values(visibleEventos)} />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddEvent}
+                  sx={{
+                    backgroundColor: "#0056b3",
+                    color: "white",
+                    marginTop: 4,
+                    padding: "12px 24px",
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
+                    borderRadius: "20px",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "#5753cc",
+                      boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.4)",
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  Agregar Evento Personalizado
+                </Button>
+              </Box>
+              <AgregarEvento
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                onSave={handleSaveEvent}
+              />
+            </Container>
+          }
         />
-        <CalendarioEventos
-          eventos={visibleEventos}
-          onEventClick={handleEventClick}
+
+        {/* Ruta para la vista detallada del evento */}
+        <Route
+          path="/evento/:date"
+          element={<DetalleEvento eventos={eventos} />}
         />
-
-        <Box
-          sx={{
-            marginTop: 4,
-            display: "flex",
-            gap: 2,
-            justifyContent: "center",
-            paddingBottom: 5,
-          }}
-        >
-          <ExportButton events={Object.values(visibleEventos)} />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddEvent}
-            sx={{
-              backgroundColor: "#0056b3",
-              color: "white",
-              marginTop: 4,
-              padding: "12px 24px",
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
-              borderRadius: "20px",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              "&:hover": {
-                backgroundColor: "#5753cc",
-                boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.4)",
-                transform: "translateY(-2px)",
-              },
-            }}
-          >
-            Agregar Evento Personalizado
-          </Button>
-        </Box>
-      </Container>
-
-      <Dialog open={!!selectedEvent} onClose={handleCloseDialog}>
-        {selectedEvent && (
-          <>
-            <DialogTitle>{selectedEvent.name}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                <strong>Fecha:</strong> {selectedEvent.date}
-                <br />
-                <strong>Hora:</strong> {selectedEvent.hour}:
-                {selectedEvent.minute.toString().padStart(2, "0")}
-                <br />
-                <strong>Descripción:</strong> {selectedEvent.description}
-                <br />
-                <strong>Ubicación:</strong> {selectedEvent.location}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                Cerrar
-              </Button>
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
-
-      {/* Componente AgregarEvento para manejar la creación de nuevos eventos */}
-      <AgregarEvento
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onSave={handleSaveEvent}
-      />
-    </div>
+      </Routes>
+    </Router>
   );
 }
 
