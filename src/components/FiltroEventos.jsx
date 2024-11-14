@@ -92,7 +92,7 @@ const FiltroEventos = ({ eventos, visibleEventos, onFilterChange }) => {
           sx={{
             position: "absolute",
             top: "300px",
-            left: "-120px",
+            left: "-210px",
             width: 250,
             padding: 2,
             backgroundColor: "#f0f4ff",

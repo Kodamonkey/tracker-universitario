@@ -1,78 +1,9 @@
 /* Fondo general */
 body {
-  background-color: #e6f0f3;
+  background-color: #ffffff;
   font-family: "Open Sans", "Roboto", Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
 
-/* Encabezado del calendario */
-.calendar-header {
-  background-color: #306696;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  border-radius: 6px 6px 0 0;
-  font-size: 18px;
-  font-weight: bold;
-}
 
-/* Días de la semana */
-.days-of-week {
-  display: flex;
-  justify-content: space-between;
-  background-color: #f1f5f8;
-  color: #333;
-  padding: 8px 0;
-  border-bottom: 1px solid #d9dee2;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* Celdas del calendario */
-.calendar-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  margin: 2px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid #d9dee2;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.calendar-cell:hover {
-  background-color: #d3e4ef;
-  transform: scale(1.05);
-}
-
-/* Eventos */
-.event {
-  color: white;
-  text-align: center;
-  padding: 5px;
-  border-radius: 4px;
-}
-
-.event-deportivo {
-  background-color: #ffeb3b; /* Amarillo */
-}
-
-.event-charla {
-  background-color: #f44336; /* Rojo */
-}
-
-.event-proximamente {
-  background-color: #2196f3; /* Azul */
-}
-
-.event-personalizado {
-  background-color: #6c63ff; /* Morado */
-}
-
-.event-otros {
-  background-color: #9c27b0; /* Púrpura */
-}

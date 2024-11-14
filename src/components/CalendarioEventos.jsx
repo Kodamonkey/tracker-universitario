@@ -14,7 +14,7 @@ const eventColors = {
 
 const CalendarioEventos = ({ eventos, onEventClick }) => {
   const diasDeLaSemana = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-  const cellSize = 60;
+  const cellSize = 70;
 
   const [mes, setMes] = useState(new Date().getMonth()); // Mes actual
   const [año, setAño] = useState(new Date().getFullYear()); // Año actual
@@ -42,85 +42,93 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
   const primerDiaDeLaSemana = new Date(año, mes, 1).getDay();
   const totalDias = new Date(año, mes + 1, 0).getDate();
 
+  // Obtener días del mes anterior
+  const diasMesAnterior = new Date(año, mes, 0).getDate();
+  const diasInicio = [...Array(primerDiaDeLaSemana)]
+    .map((_, index) => diasMesAnterior - primerDiaDeLaSemana + index + 1)
+    .map((day) => ({
+      day,
+      currentMonth: false,
+      dateKey: `${año}-${String(mes).padStart(2, "0")}-${String(day).padStart(
+        2,
+        "0"
+      )}`,
+    }));
+
+  // Obtener días del mes actual
+  const diasActuales = [...Array(totalDias)].map((_, index) => ({
+    day: index + 1,
+    currentMonth: true,
+    dateKey: `${año}-${String(mes + 1).padStart(2, "0")}-${String(
+      index + 1
+    ).padStart(2, "0")}`,
+  }));
+
+  // Obtener días del mes siguiente
+  const diasFin = [...Array(42 - diasInicio.length - diasActuales.length)].map(
+    (_, index) => ({
+      day: index + 1,
+      currentMonth: false,
+      dateKey: `${año}-${String(mes + 2).padStart(2, "0")}-${String(
+        index + 1
+      ).padStart(2, "0")}`,
+    })
+  );
+
+  // Combinar todos los días
+  const diasCompletos = [...diasInicio, ...diasActuales, ...diasFin];
+
   // Renderizar el calendario
   const renderCalendar = () => {
     const calendario = [];
-    let semana = [];
+    for (let i = 0; i < diasCompletos.length; i += 7) {
+      const semana = diasCompletos
+        .slice(i, i + 7)
+        .map(({ day, currentMonth, dateKey }) => {
+          const event = eventos[dateKey];
+          const bgColor = event
+            ? eventColors[event.type] || event.color
+            : currentMonth
+            ? "#f5f5f5"
+            : "#f5f5f5";
 
-    // Llenar los días vacíos al inicio de la primera semana
-    for (let i = 0; i < primerDiaDeLaSemana; i++) {
-      semana.push(
-        <div
-          key={`empty-${i}`}
-          style={{
-            width: `${cellSize}px`,
-            height: `${cellSize}px`,
-            backgroundColor: "#f5f5f5",
-          }}
-        ></div>
-      );
-    }
+          return (
+            <Paper
+              key={dateKey}
+              sx={{
+                width: `${cellSize}px`,
+                height: `${cellSize}px`,
+                backgroundColor: bgColor,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "2px",
+                border: "1px solid #c2c2b8",
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                cursor: event ? "pointer" : "default",
+                opacity: currentMonth ? 1 : 0.8,
+                transition: "transform 0.2s ease",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.6)",
+                },
+              }}
+              onClick={() => event && onEventClick(event)}
+            >
+              <Typography
+                variant="body2"
+                fontWeight="bold"
+                sx={{ color: currentMonth ? "#333" : "#aaa" }}
+              >
+                {day}
+              </Typography>
+            </Paper>
+          );
+        });
 
-    // Renderizar los días del mes
-    for (let day = 1; day <= totalDias; day++) {
-      const dateKey = `${año}-${String(mes + 1).padStart(2, "0")}-${String(
-        day
-      ).padStart(2, "0")}`;
-      const event = eventos[dateKey];
-      const bgColor = event
-        ? eventColors[event.type] || event.color
-        : "#ffffff";
-
-      semana.push(
-        <Paper
-          key={day}
-          sx={{
-            width: `${cellSize}px`,
-            height: `${cellSize}px`,
-            backgroundColor: bgColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "2px",
-            border: "1px solid #ddd",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            cursor: event ? "pointer" : "default",
-            transition: "transform 0.2s ease",
-            "&:hover": {
-              transform: "scale(1.05)",
-              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)",
-            },
-          }}
-          onClick={() => event && onEventClick(event)}
-        >
-          <Typography
-            variant="body2"
-            fontWeight="bold"
-            sx={{ color: event ? "#ffffff" : "#333" }}
-          >
-            {day}
-          </Typography>
-        </Paper>
-      );
-
-      if (semana.length === 7) {
-        calendario.push(
-          <div
-            key={`week-${calendario.length}`}
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            {semana}
-          </div>
-        );
-        semana = [];
-      }
-    }
-
-    // Agregar la última semana si está incompleta
-    if (semana.length > 0) {
       calendario.push(
         <div
-          key={`week-${calendario.length}`}
+          key={`week-${i}`}
           style={{ display: "flex", justifyContent: "center" }}
         >
           {semana}
@@ -139,8 +147,8 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
         margin: "auto",
         padding: "20px",
         borderRadius: "12px",
-        backgroundColor: "#ffffff",
-        border: "1px solid #ddd",
+        backgroundColor: "#ddd",
+        border: "1px solid #000",
       }}
     >
       {/* Encabezado */}
@@ -150,7 +158,7 @@ const CalendarioEventos = ({ eventos, onEventClick }) => {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: "10px",
-          padding: "0 16px",
+          padding: "0 20px",
         }}
       >
         <IconButton onClick={handlePrevMonth}>
