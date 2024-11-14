@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { InputBase, IconButton, Paper, List, ListItem, ListItemText, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -67,11 +65,8 @@ const Navbar = ({ eventos }) => {
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
         }}
       >
-        <IconButton sx={{ padding: "8px", color: "#ffffff" }} aria-label="login">
-          <AccountCircleIcon />
-        </IconButton>
-        <IconButton sx={{ padding: "8px", color: "#ffffff" }} aria-label="menu">
-          <MenuIcon />
+        <IconButton sx={{ padding: "8px", color: "#ffffff" }} aria-label="search">
+          <SearchIcon /> {/* Ícono de lupa */}
         </IconButton>
         <InputBase
           sx={{
